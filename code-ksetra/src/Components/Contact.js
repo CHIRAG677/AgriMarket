@@ -4,7 +4,7 @@ import Navbar from './Navbar'
 
 function App() {
   const [formData, setFormData] = useState({
-    name: '',
+    name: '',                                                                                                     
     type: 'farmer',
     crop: '',
     quantity: '',
