@@ -1,32 +1,17 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";  
-// import { 
-//   Home,
-//   BookOpen,
-//   LogOut,
-//   User,
-//   Camera,
-//   Mail,
-//   Phone,
-//   MapPin,
-//   Calendar,
-//   Briefcase,
-//   ArrowLeft
-// } from 'lucide-react';
-import { FaArrowCircleLeft } from "react-icons/fa";
-import { MdCameraEnhance } from "react-icons/md";
-import { FaHome, FaCalendarAlt } from "react-icons/fa";
-import { FaUser, FaPhoneAlt, FaMapPin } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
+import { FaArrowCircleLeft, FaHome, FaCalendarAlt, FaUser, FaPhoneAlt, FaMapPin, FaBriefcase } from "react-icons/fa";
 import { GiOpenBook } from "react-icons/gi";
-import { FaBriefcase } from "react-icons/fa6";
 import { CiLogout } from "react-icons/ci";
 import { IoIosMail } from "react-icons/io";
-import './Profile.css';
+import { MdCameraEnhance } from "react-icons/md";
+import "./Profile.css";
+import Navbar from "./Navbar";
 
 function Profile() {
   const navigate = useNavigate();  
-
-  const [formData, setFormData] = useState({
+  const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80");
+  const [formData, setFormData] = useState({                 
     email: "Email@example.com",
     firstName: "Name",
     lastName: "Last Name",
@@ -36,7 +21,7 @@ function Profile() {
     position: "Position",
     bio: "Your Bio Here..."
   });
-
+  
   const [isEditing, setIsEditing] = useState(false);
   const [showProfileOverlay, setShowProfileOverlay] = useState(false);
 
@@ -54,9 +39,20 @@ function Profile() {
     }, 3000);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="app-container">
-      {/* Back Button for Navigation */}
+      <Navbar/>
       <button className="back-button" onClick={() => navigate(-1)}>
          <FaArrowCircleLeft size={20} /> Back 
       </button>
@@ -67,14 +63,19 @@ function Profile() {
           onMouseEnter={() => setShowProfileOverlay(true)}
           onMouseLeave={() => setShowProfileOverlay(false)}
         >
-          <img 
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" 
-            alt="Profile" 
-            className="profile-img" 
-          />
+          <img src={profileImage} alt="Profile" className="profile-img" />
           <div className={`profile-overlay ${showProfileOverlay ? 'show' : ''}`}>
-            <MdCameraEnhance size={24} />
-            <span>Change Photo</span>
+            <label htmlFor="file-upload" className="file-upload-label">
+              <MdCameraEnhance size={24} />
+              <span>Change Photo</span>
+            </label>
+            <input 
+              type="file" 
+              id="file-upload" 
+              accept="image/*" 
+              onChange={handleImageChange} 
+              className="file-upload-input"
+            />
           </div>
         </div>
         
@@ -82,8 +83,6 @@ function Profile() {
           <h2>{formData.firstName} {formData.lastName}</h2>
           <p className="user-position">{formData.position}</p>
         </div>
-
-        {/* Navigation Links */}
         <nav className="menu">
           <Link to="/my-app/farmer" className="menu-item">
             <FaHome size={20} />
@@ -103,132 +102,52 @@ function Profile() {
           </Link>
         </nav>
       </div>
-
+      
       <main className="content">
         <div className="header">
           <h1>Profile Settings</h1>
-          <button 
-            className={`edit-button ${isEditing ? 'active' : ''}`}
-            onClick={() => setIsEditing(!isEditing)}
-          >
+          <button className={`edit-button ${isEditing ? 'active' : ''}`} onClick={() => setIsEditing(!isEditing)}>
             {isEditing ? 'Cancel' : 'Edit Profile'}
           </button>
         </div>
 
-        <div className="profile-grid">
-          <div className="info-card">
-            <h3>Personal Information</h3>
-            <div className="info-item">
-              <IoIosMail size={18} />
-              <span>{formData.email}</span>
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing} />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>First Name</label>
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} disabled={!isEditing} />
             </div>
-            <div className="info-item">
-              <FaPhoneAlt size={18} />
-              <span>{formData.phone}</span>
-            </div>
-            <div className="info-item">
-              <FaMapPin size={18} />
-              <span>{formData.location}</span>
-            </div>
-            <div className="info-item">
-              <FaCalendarAlt size={18} />
-              <span>Joined {formData.joinDate}</span>
-            </div>
-            <div className="info-item">
-              <FaBriefcase size={18} />
-              <span>{formData.position}</span>
+            <div className="form-group">
+              <label>Last Name</label>
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} disabled={!isEditing} />
             </div>
           </div>
 
-          <div className="card">
-            <form className="form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="email">Email Address</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email" 
-                  value={formData.email} 
-                  onChange={handleChange} 
-                  disabled={!isEditing}
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="firstName">First Name</label>
-                  <input 
-                    type="text" 
-                    id="firstName" 
-                    name="firstName" 
-                    value={formData.firstName} 
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="lastName">Last Name</label>
-                  <input 
-                    type="text" 
-                    id="lastName" 
-                    name="lastName" 
-                    value={formData.lastName} 
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
-                <input 
-                  type="tel" 
-                  id="phone" 
-                  name="phone" 
-                  value={formData.phone} 
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="location">Location</label>
-                <input 
-                  type="text" 
-                  id="location" 
-                  name="location" 
-                  value={formData.location} 
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="bio">Bio</label>
-                <textarea 
-                  id="bio" 
-                  name="bio" 
-                  value={formData.bio} 
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  rows={4}
-                />
-              </div>
-
-              {isEditing && (
-                <button type="submit" className="submit-btn">
-                  Save Changes
-                </button>
-              )}
-            </form>
+          <div className="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing} />
           </div>
-        </div>
+
+          <div className="form-group">
+            <label>Location</label>
+            <input type="text" name="location" value={formData.location} onChange={handleChange} disabled={!isEditing} />
+          </div>
+
+          <div className="form-group">
+            <label>Bio</label>
+            <textarea name="bio" value={formData.bio} onChange={handleChange} disabled={!isEditing} rows={4} />
+          </div>
+
+          {isEditing && <button type="submit" className="submit-btn">Save Changes</button>}
+        </form>
       </main>
 
-      <div className="notification">
-        Changes saved successfully!
-      </div>
+      <div className="notification">Changes saved successfully!</div>
     </div>
   );
 }
