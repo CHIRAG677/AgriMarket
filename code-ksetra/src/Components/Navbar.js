@@ -5,6 +5,7 @@ import {
   FaPhone,
   FaNewspaper,
   FaUser,
+  FaBox,
   FaComments,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -41,7 +42,7 @@ function Navbar() {
           <span>{translations[language].products}</span>
         </Link>
 
-        <Link to="/my-app/ai-assistance" className="nav-link">
+        <Link to="/my-app/ai-assistant" className="nav-link">
           <FaComments className="nav-icon" />
           <span>{translations[language].ai}</span>
         </Link>
@@ -54,6 +55,11 @@ function Navbar() {
         <Link to="/my-app/news" className="nav-link">
           <FaNewspaper className="nav-icon" />
           <span>{translations[language].news}</span>
+        </Link>
+
+        <Link to="/my-app/marketf" className="nav-link">
+          <FaBox className="nav-icon" />
+          <span>{translations[language].market}</span>
         </Link>
       </div>
 

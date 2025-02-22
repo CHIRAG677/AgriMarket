@@ -18,6 +18,7 @@ import Product from "./Components/Product";
 import ErrorBoundary from "./Components/ErrorBoundary";
 import LanguageSelector from "./Components/LanguageSelector";  // Import Language Selector
 import CombinedLogin from "./Components/CombinedLogin";
+import MarketF from "./Components/MarketF";
 
 function App() {
   return (
@@ -41,7 +42,8 @@ function App() {
             <Route path="/my-app/buyer-dashboard" element={<Page2 />} />
             <Route path="/my-app/news" element={<News />} />
             <Route path="/my-app/news2" element={<News2 />} />
-            <Route path="/my-app/ai-assistance" element={<Ai />} />
+            <Route path="/my-app/ai-assistant" element={<Ai />} />
+            <Route path="/my-app/marketf" element={<MarketF/>} />
             <Route path="/my-app/products" element={<Product />} />
           </Routes>
         </ErrorBoundary>
